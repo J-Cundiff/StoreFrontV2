@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Protecting Sensitive Information
+/StoreFrontV2/appsettings.json
