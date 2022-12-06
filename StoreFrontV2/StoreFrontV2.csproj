@@ -198,4 +198,8 @@
     <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\StoreFrontV2.DATA.EF\StoreFrontV2.DATA.EF.csproj" />
+  </ItemGroup>
+
 </Project>
