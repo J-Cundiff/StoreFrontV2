@@ -21,9 +21,20 @@ namespace StoreFrontV2.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var storeFrontContext = _context.Products.Include(p => p.Category).Include(p => p.Status).Include(p => p.Supplier);
+            var storeFrontContext = _context.Products.Include(p => p.Category)
+                .Include(p => p.Status)
+                .Include(p => p.Supplier);
             return View(await storeFrontContext.ToListAsync());
         }
+
+        public async Task<IActionResult> TiledProducts()
+        {
+            var storeFrontContext = _context.Products.Include(p => p.Category)
+                .Include(p => p.Status)
+                .Include(p => p.Supplier);
+            return View(await storeFrontContext.ToListAsync());
+        }
+
 
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
