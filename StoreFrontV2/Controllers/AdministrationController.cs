@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace StoreFrontV2.Controllers//Update namespace
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdministrationController : Controller
     {
         #region Props/Ctors

@@ -4,9 +4,50 @@
     ViewData["Title"] = Model.ProductName + " Details";
 }
 
-<h1>@ViewData["Title"]</h1>
 
-<div>
+
+
+<div class="row">
+
+        <div class="col-sm-9 offset-3">
+        	<div class="product-details">
+        		<!--product-details-->
+        		<div class="col-sm-5">
+        			<div class="view-product">
+        				@*add Model.ProductImage when get photos*@
+        				<img src="~/images/okeykat-w6elADh_jww-unsplash.jpg" alt="@Model.ProductDescription" />
+        			</div>
+        		</div>
+        		<div class="col-sm-7">
+        			<div class="product-information">
+        				<!--/product-information-->
+        				<h2><strong>@Model.ProductName</strong></h2>
+        				<p>Product ID: @Model.ProductId</p>
+        				<span>
+        					<span>US @Html.DisplayFor(model => model.ProductPrice)</span>
+        					<label>Quantity:</label>
+        					<input type="text" value="3" />
+        					<button type="button" class="btn btn-fefault cart">
+        						<i class="fa fa-shopping-cart"></i>
+        						Add to cart
+        					</button>
+        				</span>
+        				<p><b>Availability:</b> @Model.Status.StatusName</p>
+        				<p><b>Brand:</b> @Model.Supplier.SupplierName</p>
+                        <div>
+                            <a asp-action="TiledProducts" class="btn btn-success">Back to Products</a>
+                        </div>
+        			</div><!--/product-information-->
+        		</div>
+        	</div><!--/product-details-->
+        </div>
+        
+</div>
+
+
+
+
+@*<div>
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ProductName)
@@ -43,7 +84,7 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.ProductImage)
-        </dd>*@
+        </dd>*/@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Category)
         </dt>
@@ -67,4 +108,4 @@
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.ProductId">Edit</a> |
     <a asp-action="Index">Back to Products</a>
-</div>
+</div>*@

@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signInManager
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
@@ -42,8 +44,12 @@
 							<li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
 							<li><a href="@Url.Action("Checkout", "Home")"><i class="fa fa-crosshairs"></i> Checkout</a></li>
 							<li><a href="@Url.Action("Cart", "Home")"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-							<li><a href="login.html"><i class="fa fa-lock"></i> Login</a></li>
+							@*<li><a href="login.html"><i class="fa fa-lock"></i> Login</a></li>*@
 						</ul>
+				
+							<partial name="_LoginPartial" />
+
+							
 					</div>
 				</div>
 			</div>
@@ -66,13 +72,51 @@
 					<div class="mainmenu pull-left">
 						<ul class="nav navbar-nav collapse navbar-collapse">
 							<li>@Html.ActionLink("Home", "Index", "Home")</li>
-							<li>@Html.ActionLink("Shop", "Index", "Products")</li>
+							<li>
+								@if (User.IsInRole("Admin"))
+								{
+									@Html.ActionLink("Shop", "Index", "Products")
+								}
+								else
+								{
+									@Html.ActionLink("Shop", "TiledProducts", "Products")
+								}
+							</li>
 							<li>@Html.ActionLink("Cart", "Cart", "Home")</li>
 							<li>@Html.ActionLink("Checkout", "Checkout", "Home")</li>
 							<li><a href="contact-us.html">Contact</a></li>
-							
-								
-							
+							@if (User.IsInRole("Admin"))
+							{
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"> <span class="nav-label">Admin <span class="caret"></span></a>
+									<ul class="dropdown-menu">
+										<li class="nav-item">
+											<a class="nav-link" asp-action="ListUsers" asp-controller="Administration">User</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" asp-action="ListRoles" asp-controller="Administration">Roles</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" asp-action="Index" asp-controller="Suppliers">Suppliers</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" asp-action="Index" asp-controller="Categories">Categories</a>
+										</li>
+									</ul>
+								</li>
+
+
+
+							}
+							@*Show the Orders link if the user is signed in (Authenticated)
+							even if they are not an Admin (Authorized)
+							*@
+							@if (signInManager.IsSignedIn(User))
+							{
+								<li class="nav-item">
+									<a class="nav-link" asp-action="Index" asp-controller="OrderDetails">Orders</a>
+								</li>
+							}
 						</ul>
 					</div>
 				</div>

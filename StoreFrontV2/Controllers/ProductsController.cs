@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +11,7 @@ using StoreFrontV2.DATA.EF.Models;
 
 namespace StoreFrontV2.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ProductsController : Controller
     {
         private readonly StoreFrontContext _context;
@@ -19,6 +22,7 @@ namespace StoreFrontV2.Controllers
         }
 
         // GET: Products
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var storeFrontContext = _context.Products.Include(p => p.Category)
@@ -26,7 +30,7 @@ namespace StoreFrontV2.Controllers
                 .Include(p => p.Supplier);
             return View(await storeFrontContext.ToListAsync());
         }
-
+        [AllowAnonymous]
         public async Task<IActionResult> TiledProducts()
         {
             var storeFrontContext = _context.Products.Include(p => p.Category)
@@ -35,7 +39,7 @@ namespace StoreFrontV2.Controllers
             return View(await storeFrontContext.ToListAsync());
         }
 
-
+        [AllowAnonymous]
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
