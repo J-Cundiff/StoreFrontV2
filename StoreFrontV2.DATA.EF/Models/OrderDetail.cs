@@ -16,8 +16,14 @@ namespace StoreFrontV2.DATA.EF.Models
         public DateTime OrderDate { get; set; }
         public decimal? ShippingCost { get; set; }
 
-        public virtual Customer Customer { get; set; } = null!;
-        public virtual Product Product { get; set; } = null!;
-        public virtual Shipper Shipper { get; set; } = null!;
+        //Our form does not supply an entire Category object/record.
+        //The property below created by Entity Framework does not allow
+        //null values for Category. In  Order to ensure we are able to edit
+        //products (pass Model Vaildation) we will need to update the property 
+        //to allow nulls.
+        //public virtual Category Category { get; set; } = null!;
+        public virtual Customer? Customer { get; set; }
+        public virtual Product? Product { get; set; }
+        public virtual Shipper? Shipper { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StoreFrontV2.DATA.EF.Models;
+using StoreFrontV2.Utilities;
 
 namespace StoreFrontV2.Controllers
 {
@@ -15,10 +17,11 @@ namespace StoreFrontV2.Controllers
     public class ProductsController : Controller
     {
         private readonly StoreFrontContext _context;
-
-        public ProductsController(StoreFrontContext context)
+        private readonly IWebHostEnvironment _webHostEnvironment;//gives access to infomation about the host(Server)
+        public ProductsController(StoreFrontContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Products
@@ -75,10 +78,77 @@ namespace StoreFrontV2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ProductPrice,ProductDescription,QtyInStock,QtyOnOrder,StatusId,ProductImage,CategoryId,SupplierId")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ProductPrice,ProductDescription,QtyInStock,QtyOnOrder,StatusId,ProductImage,CategoryId,SupplierId,Image")] Product product)
         {
             if (ModelState.IsValid)
             {
+                #region fileUpload
+                //Check if a file was uploaded
+                if (product.Image != null)
+                {
+                    //Check the file type
+                    // - Store the extention of the image in a string
+                    string ext = Path.GetExtension(product.Image.FileName);
+
+                    //Create a list of vaild extentions to check the ext against
+                    string[] vaildExts = { ".jpeg", ".jpg", ".gif", ".png" };
+
+                    //Verify the uploaded file has an extention matching one of the extetions in the list above
+                    //We will also want to verify the file size will work with our .NET app
+                    if (vaildExts.Contains(ext.ToLower()) && product.Image.Length < 4_194_303)
+                    {
+                        //Generate a unique file name
+                        product.ProductImage = Guid.NewGuid() + ext;
+
+                        //Save the file to the web sever (here, save to the wwwroot/images
+                        //To access the wwwroot, we added the _webHostEnvironment feild to the controller (See the top)
+                        //Retrieve the path to the wwwroot
+                        string webRootPath = _webHostEnvironment.WebRootPath;
+
+                        //Variable for the full imagepath (this is where we will save the image)
+                        string fullImagePath = webRootPath + "/images/";
+
+                        //Creat a MemoryStream to read the image into the server memory
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            //Tranfer the file from the request to the server memory
+                            await product.Image.CopyToAsync(memoryStream);
+
+                            //Genrate the image using the info captured from the MemroyStream
+                            //Add using staement for System.Drawing to get access to the Image class
+                            using (var img = Image.FromStream(memoryStream))
+                            {
+                                //Send the image to the ImageUtility for resizing and thumbnail creation
+                                //Items needed for the ImageUtility.ResizeImage()
+                                //- a string with the path where the file should be saved
+                                //- a string with the name of the file
+                                //- The actual Image itself
+                                //- An Int with the maximum size (in pixels)
+                                //- An int with the maximum thumbnail size
+
+                                int maxImageSize = 500; //In pixels
+                                int maxThumbSize = 100; //In pixels
+
+                                ImageUtility.ResizeImage(fullImagePath, product.ProductImage, img, maxImageSize, maxThumbSize);
+
+                                //myFile.Save("path/to/folder", "filename"); => How to save something that is not an image.
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    //No image was uplaoded, assign a default fileName
+                    //And include a default image (With that fileName) in the images folder
+                    product.ProductImage = "noimage.png";
+                }
+
+
+                #endregion
+
+
+
+
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -113,7 +183,7 @@ namespace StoreFrontV2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ProductPrice,ProductDescription,QtyInStock,QtyOnOrder,StatusId,ProductImage,CategoryId,SupplierId")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,ProductPrice,ProductDescription,QtyInStock,QtyOnOrder,StatusId,ProductImage,CategoryId,SupplierId,Image")] Product product)
         {
             if (id != product.ProductId)
             {
@@ -122,6 +192,63 @@ namespace StoreFrontV2.Controllers
 
             if (ModelState.IsValid)
             {
+
+                #region FILE UPLOAD - EDIT
+
+                //Retain the old Image file name so we can delete it if a new file was uploaded
+                string oldImageName = product.ProductImage;
+
+                //check if the user uploaded the file
+                if (product.Image != null)
+                {
+                    //Get the files extention
+                    string ext = Path.GetExtension(product.Image.FileName);
+
+                    //Create the list of vaild extentions
+                    string[] validExts = { ".jpeg", ".jpg", ".gif", ".png" };
+
+                    //check the files extention & file size
+                    if (validExts.Contains(ext.ToLower()) && product.Image.Length < 4_194_303)
+                    {
+                        //Generate a unqiue file name
+                        product.ProductImage = Guid.NewGuid() + ext;
+
+                        //Build the file path to save the image
+                        string webRootPath = _webHostEnvironment.WebRootPath;
+                        string fullImagePath = webRootPath + "/images/";
+
+                        //Delete the old image
+                        if (oldImageName != "noimage.png")
+                        {
+                            ImageUtility.Delete(fullImagePath, oldImageName);
+                        }
+
+                        //Save the new image to the webroot
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            //Get the image from the MemoryStream
+                            await product.Image.CopyToAsync(memoryStream);
+
+
+                            //Copy the image from the stream into an Image on the server
+                            using (var img = Image.FromStream(memoryStream))
+                            {
+                                //SEtup the max image and maxThumbNail
+                                int maxImageSize = 500;
+                                int maxThumbSize = 100;
+
+                                //resize and save the image
+                                ImageUtility.ResizeImage(fullImagePath, product.ProductImage, img, maxImageSize, maxThumbSize);
+                            }
+                        }
+                    }
+                }
+
+
+
+                #endregion
+
+
                 try
                 {
                     _context.Update(product);
