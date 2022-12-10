@@ -97,6 +97,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\cart.html" />
     <None Include="wwwroot\checkout.html" />
     <None Include="wwwroot\contact-us.html" />
