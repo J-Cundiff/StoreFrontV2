@@ -13,11 +13,11 @@
 
 	@if (User.IsInRole("Admin"))
 	{
-		<a asp-action="Create">Add Product</a> <span> | </span>
+		<a asp-action="Create" class="btn btn-primary">Add Product</a> 
 
 	}
 
-	<a asp-action="TiledProducts" as>Tile View</a>
+	<a asp-action="TiledProducts" class="btn btn-primary">Tile View</a>
 
 </p>
 

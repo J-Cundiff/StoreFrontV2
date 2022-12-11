@@ -4,10 +4,10 @@
     ViewData["Title"] = Model.SupplierName + " Details";
 }
 
-<h1>@ViewData["Title"]</h1>
-<hr />
-<div>
-    <dl class="row">
+<h2 class="title text-center">@ViewData["Title"]</h2>
+
+<div class="row mb-5">
+    <dl class="col-md-9 col-md-offset-4">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.SupplierName)
         </dt>
@@ -44,9 +44,12 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.SupplierDescription)
         </dd>
+        <dd>
+            <div>
+                <a asp-action="Edit" class="btn btn-primary" asp-route-id="@Model?.SupplierId">Edit</a>
+                <a asp-action="Index" class="btn btn-success">Back to Suppliers</a>
+            </div>
+        </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.SupplierId">Edit</a> |
-    <a asp-action="Index">Back to Suppliers</a>
-</div>
+

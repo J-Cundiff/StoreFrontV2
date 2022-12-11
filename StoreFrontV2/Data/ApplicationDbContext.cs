@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using StoreFrontV2.Models;
 
 namespace StoreFrontV2.Data
 {
@@ -9,5 +10,6 @@ namespace StoreFrontV2.Data
             : base(options)
         {
         }
+        public DbSet<StoreFrontV2.Models.ContactViewModel> ContactViewModel { get; set; }
     }
 }

@@ -13,6 +13,10 @@ body {
   font-weight:400px;
 }
 
+.mb-5{
+	margin-bottom: 5px;
+}
+
 ul li {
   list-style: none;
 }
@@ -585,10 +589,17 @@ ul.sub-menu {
 }
 
 
+
+#slider-carousel img {
+	object-fit: fill;
+	width: 100%;
+	max-height: 500px;
+}
+
 .pricing {
-  position: absolute;
-  right: 40%;
-  top: 52%;
+	position: absolute;
+	right: 40%;
+	top: 52%;
 }
 
 .girl {
@@ -1045,7 +1056,7 @@ h2.title {
 }
 
 #recommended-item-carousel .carousel-inner .item {
-  padding-left: 0;
+	padding-left: 0;
 }
 
 .recommended-item-control {
@@ -1892,6 +1903,20 @@ h2.title {
   margin-top: 20px;
 }
 
+.btn-danger {
+	border: 0 none;
+	border-radius: 0;
+	margin-right: 15px;
+	margin-top: 20px;
+}
+
+.btn-success {
+	border: 0 none;
+	border-radius: 0;
+	margin-right: 15px;
+	margin-top: 20px;
+}
+
 
 .form-two, .form-one {
   float: left;
@@ -2520,4 +2545,8 @@ h2.title {
   color: #FE980F;
 }
 
+.roleContainer{
+	border:2px solid #B4B1AB;
+	padding: 5px;
+}
 
