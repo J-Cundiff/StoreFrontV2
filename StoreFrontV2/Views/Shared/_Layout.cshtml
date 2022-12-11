@@ -28,33 +28,34 @@
 
 <body>
 
-	<div class="header-middle">
+	@*<div class="header-middle">
 		<!--header-middle-->
 		<div class="container">
 			<div class="row">
 				<div class="col-sm-4">
 					<div class="logo pull-left">
-						<a href="index.html"><img src="~/images/home/logo.png" alt="" /></a>
+						<a href="@Url.Action("Index", "Home")"><img src="~/images/PetExpress-logos_blackv2.png" alt="" /></a>
 					</div>
 				</div>
-				<div class="col-sm-8">
+				@*<div class="col-sm-8">
 					<div class="shop-menu pull-right">
 						<ul class="nav navbar-nav">
 							<li><a href="#"><i class="fa fa-user"></i> Account</a></li>
 							<li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
 							<li><a href="@Url.Action("Checkout", "Home")"><i class="fa fa-crosshairs"></i> Checkout</a></li>
 							<li><a href="@Url.Action("Cart", "Home")"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-							@*<li><a href="login.html"><i class="fa fa-lock"></i> Login</a></li>*@
+							@*<li><a href="login.html"><i class="fa fa-lock"></i> Login</a></li>*/@
 						</ul>
+							
+							
 				
-							<partial name="_LoginPartial" />
 
 							
 					</div>
-				</div>
+				</div>*/@
 			</div>
 		</div>
-	</div><!--/header-middle-->
+	</div><!--/header-middle-->*@
 
 	<div class="header-bottom">
 		<!--header-bottom-->
@@ -68,6 +69,11 @@
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 						</button>
+					</div>
+					<div class="col-sm-4">
+						<div class="logo pull-left">
+							<a href="@Url.Action("Index", "Home")"><img src="~/images/PetExpress-logos_blackv2.png" alt="" /></a>
+						</div>
 					</div>
 					<div class="mainmenu pull-left">
 						<ul class="nav navbar-nav collapse navbar-collapse">
@@ -84,7 +90,7 @@
 							</li>
 							<li>@Html.ActionLink("Cart", "Cart", "Home")</li>
 							<li>@Html.ActionLink("Checkout", "Checkout", "Home")</li>
-							<li><a href="contact-us.html">Contact</a></li>
+							<li>@Html.ActionLink("Contact", "Contact", "Home")</li>
 							@if (User.IsInRole("Admin"))
 							{
 								<li class="nav-item dropdown">
@@ -102,6 +108,9 @@
 										<li class="nav-item">
 											<a class="nav-link" asp-action="Index" asp-controller="Categories">Categories</a>
 										</li>
+										<li class="nav-item">
+											<a class="nav-link" asp-action="Index" asp-controller="Shippers">Shippers</a>
+										</li>
 									</ul>
 								</li>
 
@@ -117,6 +126,7 @@
 									<a class="nav-link" asp-action="Index" asp-controller="OrderDetails">Orders</a>
 								</li>
 							}
+							<li><partial name="_LoginPartial" /></li>
 						</ul>
 					</div>
 				</div>
