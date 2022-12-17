@@ -7,7 +7,7 @@ namespace StoreFrontV2.DATA.EF.Models
     {
         public Product()
         {
-            OrderDetails = new HashSet<OrderDetail>();
+            OrderProducts = new HashSet<OrderProduct>();
         }
 
         public int ProductId { get; set; }
@@ -21,16 +21,9 @@ namespace StoreFrontV2.DATA.EF.Models
         public int CategoryId { get; set; }
         public int SupplierId { get; set; }
 
-
-        //Our form does not supply an entire Category object/record.
-        //The property below created by Entity Framework does not allow
-        //null values for Category. In  Order to ensure we are able to edit
-        //products (pass Model Vaildation) we will need to update the property 
-        //to allow nulls.
-        //public virtual Category Category { get; set; } = null!;
         public virtual Category? Category { get; set; }
         public virtual ProductStatus? Status { get; set; }
         public virtual Supplier? Supplier { get; set; }
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public virtual ICollection<OrderProduct> OrderProducts { get; set; }
     }
 }

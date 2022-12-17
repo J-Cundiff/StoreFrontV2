@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StoreFrontV2.DATA.EF.Models;
 using StoreFrontV2.Utilities;
+using X.PagedList;
 
 namespace StoreFrontV2.Controllers
 {
@@ -30,16 +31,70 @@ namespace StoreFrontV2.Controllers
         {
             var storeFrontContext = _context.Products.Include(p => p.Category)
                 .Include(p => p.Status)
+                .Include(p => p.OrderProducts)
                 .Include(p => p.Supplier);
             return View(await storeFrontContext.ToListAsync());
         }
         [AllowAnonymous]
-        public async Task<IActionResult> TiledProducts()
+        public async Task<IActionResult> TiledProducts(string searchTerm, int categoryId = 0, int page = 1)
         {
-            var storeFrontContext = _context.Products.Include(p => p.Category)
+            
+            //Items oer page
+            int pageSize = 12;
+
+            //var storeFrontContext = _context.Products.Include(p => p.Category)
+            //    .Include(p => p.Status)
+            //    .Include(p => p.OrderProducts)
+            //    .Include(p => p.Supplier);
+
+            //Category Filter
+            var products = _context.Products.Where(p => p.StatusId != 4)
                 .Include(p => p.Status)
-                .Include(p => p.Supplier);
-            return View(await storeFrontContext.ToListAsync());
+                .Include(p => p.OrderProducts)
+                .Include(p => p.Supplier).ToList();
+
+            //Create a ViewData object to send a list of categories to the View
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName");
+            ViewBag.Category = 0;//Adding this variable to persist (save) the selected Category
+
+            if (categoryId != 0)
+            {
+                products = products.Where(p => p.CategoryId == categoryId).ToList();
+
+                //Repopulate the dropdown with the category selected
+                ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", categoryId);
+                ViewBag.Category = categoryId;
+            }
+
+            //Search Term Option
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                searchTerm = searchTerm.ToLower();
+
+                products = _context.Products.Where(p =>
+                
+                p.ProductName.ToLower().Contains(searchTerm) ||
+                p.Supplier.SupplierName.ToLower().Contains(searchTerm) ||
+                p.Category.CategoryName.ToLower().Contains(searchTerm) ||
+                p.ProductDescription.ToLower().Contains(searchTerm)).ToList();
+
+                //Store the number of results
+                ViewBag.NbrResults = products.Count;
+
+                //Store thesearch
+                ViewBag.SearchTerm = searchTerm;
+            }
+            else
+            {
+                ViewBag.NbrResults = null;
+                ViewBag.SearchTerm = null;
+            }
+
+
+
+            //return View(await products.ToListAsync());
+            //return View(products);  
+            return View(products.ToPagedList(page, pageSize));
         }
 
         [AllowAnonymous]

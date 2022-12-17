@@ -15,6 +15,10 @@
 	<link href="~/css/animate.css" rel="stylesheet">
 	<link href="~/css/main.css" rel="stylesheet">
 	<link href="~/css/responsive.css" rel="stylesheet">
+	@*The DataTable stylesheet was pulled from https://datatables.net*@
+	<!-- DataTables-->
+	<link href="//cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet" />
+
 	<!--[if lt IE 9]>
 	<script src="js/html5shiv.js"></script>
 	<script src="js/respond.min.js"></script>
@@ -27,7 +31,7 @@
 </head><!--/head-->
 
 <body>
-
+<header>
 	@*<div class="header-middle">
 		<!--header-middle-->
 		<div class="container">
@@ -72,7 +76,7 @@
 					</div>
 					<div class="col-sm-4">
 						<div class="logo pull-left">
-							<a href="@Url.Action("Index", "Home")"><img src="~/images/PetExpress-logos_blackv2.png" alt="" /></a>
+							<a href="@Url.Action("Index", "Home")"><img src="~/images/PetExpress-logos_blackv2.png" alt="Pet Express Logo" /></a>
 						</div>
 					</div>
 					<div class="mainmenu pull-left">
@@ -88,16 +92,15 @@
 									@Html.ActionLink("Shop", "TiledProducts", "Products")
 								}
 							</li>
-							<li>@Html.ActionLink("Cart", "Cart", "Home")</li>
-							<li>@Html.ActionLink("Checkout", "Checkout", "Home")</li>
+							<li>@Html.ActionLink("Shopping Cart", "Index", "ShoppingCart")</li>
 							<li>@Html.ActionLink("Contact", "Contact", "Home")</li>
 							@if (User.IsInRole("Admin"))
 							{
 								<li class="nav-item dropdown">
-									<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"> <span class="nav-label">Admin <span class="caret"></span></a>
+									<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"> <span class="nav-label">Admin</span> <span class="caret"></span></a>
 									<ul class="dropdown-menu">
 										<li class="nav-item">
-											<a class="nav-link" asp-action="ListUsers" asp-controller="Administration">User</a>
+											<a class="nav-link" asp-action="ListUsers" asp-controller="Administration">Users</a>
 										</li>
 										<li class="nav-item">
 											<a class="nav-link" asp-action="ListRoles" asp-controller="Administration">Roles</a>
@@ -109,7 +112,13 @@
 											<a class="nav-link" asp-action="Index" asp-controller="Categories">Categories</a>
 										</li>
 										<li class="nav-item">
-											<a class="nav-link" asp-action="Index" asp-controller="Shippers">Shippers</a>
+											<a class="nav-link" asp-action="Index" asp-controller="OrderDetails">Orders</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" asp-action="Index" asp-controller="Customers">Customers</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" asp-action="Index" asp-controller="OrderDetails">Orders</a>
 										</li>
 									</ul>
 								</li>
@@ -117,28 +126,14 @@
 
 
 							}
-							@*Show the Orders link if the user is signed in (Authenticated)
-							even if they are not an Admin (Authorized)
-							*@
-							@if (signInManager.IsSignedIn(User))
-							{
-								<li class="nav-item">
-									<a class="nav-link" asp-action="Index" asp-controller="OrderDetails">Orders</a>
-								</li>
-							}
 							<li><partial name="_LoginPartial" /></li>
 						</ul>
-					</div>
-				</div>
-				<div class="col-sm-3">
-					<div class="search_box pull-right">
-						<input type="text" placeholder="Search" />
 					</div>
 				</div>
 			</div>
 		</div>
 	</div><!--/header-bottom-->
-	</header><!--/header-->
+</header><!--/header-->
 
 	@RenderBody()
 
@@ -148,7 +143,7 @@
 		<div class="footer-widget">
 			<div class="container">
 				<div class="row">
-					<div class="col-sm-2">
+					<div class="col-sm-4">
 						<div class="single-widget">
 							<h2>Service</h2>
 							<ul class="nav nav-pills nav-stacked">
@@ -160,19 +155,7 @@
 							</ul>
 						</div>
 					</div>
-					<div class="col-sm-2">
-						<div class="single-widget">
-							<h2>Quock Shop</h2>
-							<ul class="nav nav-pills nav-stacked">
-								<li><a href="#">T-Shirt</a></li>
-								<li><a href="#">Mens</a></li>
-								<li><a href="#">Womens</a></li>
-								<li><a href="#">Gift Cards</a></li>
-								<li><a href="#">Shoes</a></li>
-							</ul>
-						</div>
-					</div>
-					<div class="col-sm-2">
+					<div class="col-sm-4">
 						<div class="single-widget">
 							<h2>Links</h2>
 							<ul class="nav nav-pills nav-stacked">
@@ -180,12 +163,11 @@
 								<li>@Html.ActionLink("Order Details", "Index", "OrderDetails")</li>
 								<li>@Html.ActionLink("Shop", "Index", "Products")</li>
 								<li>@Html.ActionLink("Product Status", "Index", "ProductStatus")</li>
-								<li>@Html.ActionLink("Shippers", "Index", "Shippers")</li>
 								<li>@Html.ActionLink("Suppliers", "Index", "Suppliers")</li>
 							</ul>
 						</div>
 					</div>
-					<div class="col-sm-2">
+					<div class="col-sm-4">
 						<div class="single-widget">
 							<h2>About Shopper</h2>
 							<ul class="nav nav-pills nav-stacked">
@@ -197,7 +179,7 @@
 							</ul>
 						</div>
 					</div>
-					<div class="col-sm-3 col-sm-offset-1">
+					@*<div class="col-sm-3 col-sm-offset-1">
 						<div class="single-widget">
 							<h2>About Shopper</h2>
 							<form action="#" class="searchform">
@@ -206,7 +188,7 @@
 								<p>Get the most recent updates from <br />our site and be updated your self...</p>
 							</form>
 						</div>
-					</div>
+					</div>*@
 
 				</div>
 			</div>
@@ -215,8 +197,8 @@
 		<div class="footer-bottom">
 			<div class="container">
 				<div class="row">
-					<p class="pull-left">Copyright © @DateTime.Now.Year E-SHOPPER Inc. All rights reserved.</p>
-					<p class="pull-right">Designed by <span><a target="_blank" href="http://www.themeum.com">Themeum</a></span></p>
+					<p class="pull-left">Copyright © @DateTime.Now.Year PetExpress Inc. All rights reserved.</p>
+					@*<p class="pull-right">Designed by <span><a target="_blank" href="http://www.themeum.com">Themeum</a></span></p>*@
 				</div>
 			</div>
 		</div>
@@ -224,8 +206,11 @@
 	</footer><!--/Footer-->
 
 
-
+	
 	<script src="~/js/jquery.js"></script>
+
+	<!--DataTables-->
+	<script src="//cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 	<script src="~/js/bootstrap.min.js"></script>
 	<script src="~/js/jquery.scrollUp.min.js"></script>
 	<script src="~/js/price-range.js"></script>

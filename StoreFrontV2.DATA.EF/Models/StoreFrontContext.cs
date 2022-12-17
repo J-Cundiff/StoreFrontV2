@@ -23,11 +23,12 @@ namespace StoreFrontV2.DATA.EF.Models
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; } = null!;
         public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
+        public virtual DbSet<ContactViewModel> ContactViewModels { get; set; } = null!;
         public virtual DbSet<Customer> Customers { get; set; } = null!;
         public virtual DbSet<OrderDetail> OrderDetails { get; set; } = null!;
+        public virtual DbSet<OrderProduct> OrderProducts { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<ProductStatus> ProductStatuses { get; set; } = null!;
-        public virtual DbSet<Shipper> Shippers { get; set; } = null!;
         public virtual DbSet<Supplier> Suppliers { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -35,7 +36,7 @@ namespace StoreFrontV2.DATA.EF.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=.\\sqlexpress;Database=StoreFront;Trusted_Connection=true;MultipleActiveResultSets=true;");
+                optionsBuilder.UseSqlServer("Server=.\\sqlexpress;database=StoreFront;Trusted_Connection=true;MultipleActiveResultSets=true;");
             }
         }
 
@@ -143,6 +144,13 @@ namespace StoreFrontV2.DATA.EF.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<ContactViewModel>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("ContactViewModel");
+            });
+
             modelBuilder.Entity<Customer>(entity =>
             {
                 entity.Property(e => e.CustomerId)
@@ -198,8 +206,6 @@ namespace StoreFrontV2.DATA.EF.Models
 
                 entity.Property(e => e.OrderDate).HasColumnType("datetime");
 
-                entity.Property(e => e.ProductId).HasColumnName("ProductID");
-
                 entity.Property(e => e.ShippedCity)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -213,8 +219,6 @@ namespace StoreFrontV2.DATA.EF.Models
                     .IsUnicode(false)
                     .IsFixedLength();
 
-                entity.Property(e => e.ShipperId).HasColumnName("ShipperID");
-
                 entity.Property(e => e.ShipperName)
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -226,18 +230,29 @@ namespace StoreFrontV2.DATA.EF.Models
                     .HasForeignKey(d => d.CustomerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrderDetails_Customers");
+            });
+
+            modelBuilder.Entity<OrderProduct>(entity =>
+            {
+                entity.Property(e => e.OrderProductId).HasColumnName("OrderProductID");
+
+                entity.Property(e => e.OrderId).HasColumnName("OrderID");
+
+                entity.Property(e => e.ProductId).HasColumnName("ProductID");
+
+                entity.Property(e => e.ProductPrice).HasColumnType("money");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.OrderProducts)
+                    .HasForeignKey(d => d.OrderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderProducts_OrderDetails");
 
                 entity.HasOne(d => d.Product)
-                    .WithMany(p => p.OrderDetails)
+                    .WithMany(p => p.OrderProducts)
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OrderDetails_Products");
-
-                entity.HasOne(d => d.Shipper)
-                    .WithMany(p => p.OrderDetails)
-                    .HasForeignKey(d => d.ShipperId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OrderDetails_Shippers");
+                    .HasConstraintName("FK_OrderProducts_Products");
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -294,28 +309,6 @@ namespace StoreFrontV2.DATA.EF.Models
                 entity.Property(e => e.StatusName)
                     .HasMaxLength(50)
                     .IsUnicode(false);
-            });
-
-            modelBuilder.Entity<Shipper>(entity =>
-            {
-                entity.Property(e => e.ShipperId).HasColumnName("ShipperID");
-
-                entity.Property(e => e.City)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Country)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ShipperName)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.State)
-                    .HasMaxLength(2)
-                    .IsUnicode(false)
-                    .IsFixedLength();
             });
 
             modelBuilder.Entity<Supplier>(entity =>

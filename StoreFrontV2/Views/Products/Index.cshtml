@@ -1,13 +1,10 @@
 ﻿@model IEnumerable<StoreFrontV2.DATA.EF.Models.Product>
 
+
 @{
     ViewData["Title"] = "Shop";
 }
 
-
-@*<p>
-    <a asp-action="Create">Add Product</a>
-</p>*@
 
 <p class="text-center" align="center">
 
@@ -96,7 +93,7 @@
 								<h4 class="panel-title">
 									<a data-toggle="collapse" data-parent="#accordian" href="#lizard">
 										<span class="badge pull-right"><i class="fa fa-plus"></i></span>
-										Lizard
+										Reptile
 									</a>
 								</h4>
 							</div>
@@ -185,8 +182,8 @@
 					                @Html.DisplayFor(modelItem => item.QtyOnOrder)
 					            </td>*@
 					            <td>
-										<!--TODO Add /t_item.ProductImage when get photos-->
-										<img src="~/images/t_okeykat-w6elADh_jww-unsplash.jpg" class="img-fluid" alt="@item.ProductDescription" />
+										
+									<img src="~/images/t_@item.ProductImage" class="img-fluid" alt="@item.ProductDescription" />
 					                @*@Html.DisplayFor(modelItem => item.ProductImage)*@
 					            </td>
 					            <td>
@@ -215,7 +212,7 @@
 									- Otherwise, disable the delete link
 									*@
 
-											@if (item.OrderDetails.Count() == 0)
+											@if (item.OrderProducts.Count() == 0)
 											{
 												//Allow user to delete
 												<a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
@@ -242,77 +239,14 @@
 	</div>
 </section>
 
-@*<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductDescription)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.QtyInStock)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.QtyOnOrder)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductImage)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Supplier)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.ProductId">
-                @Html.DisplayFor(modelItem => item.ProductName)
-                </a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductDescription)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QtyInStock)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QtyOnOrder)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductImage)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.CategoryName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status.StatusName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Supplier.SupplierName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
-                @*<a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |*2@
-                <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>*@
+
+@section scripts {
+	<script>
+
+		$(document).ready(function () {
+			//Update the selector in the function to taget the element with the class of table
+			$('.table').DataTable();
+		});
+	</script>
+
+} 

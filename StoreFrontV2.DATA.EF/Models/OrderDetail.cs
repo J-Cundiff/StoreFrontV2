@@ -5,10 +5,13 @@ namespace StoreFrontV2.DATA.EF.Models
 {
     public partial class OrderDetail
     {
+        public OrderDetail()
+        {
+            OrderProducts = new HashSet<OrderProduct>();
+        }
+
         public int OrderId { get; set; }
         public string CustomerId { get; set; } = null!;
-        public int ShipperId { get; set; }
-        public int ProductId { get; set; }
         public string ShipperName { get; set; } = null!;
         public string ShippedCity { get; set; } = null!;
         public string? ShippedState { get; set; }
@@ -16,14 +19,7 @@ namespace StoreFrontV2.DATA.EF.Models
         public DateTime OrderDate { get; set; }
         public decimal? ShippingCost { get; set; }
 
-        //Our form does not supply an entire Category object/record.
-        //The property below created by Entity Framework does not allow
-        //null values for Category. In  Order to ensure we are able to edit
-        //products (pass Model Vaildation) we will need to update the property 
-        //to allow nulls.
-        //public virtual Category Category { get; set; } = null!;
-        public virtual Customer? Customer { get; set; }
-        public virtual Product? Product { get; set; }
-        public virtual Shipper? Shipper { get; set; }
+        public virtual Customer Customer { get; set; } = null!;
+        public virtual ICollection<OrderProduct> OrderProducts { get; set; }
     }
 }

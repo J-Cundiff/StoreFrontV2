@@ -1,4 +1,8 @@
-﻿@model IEnumerable<StoreFrontV2.DATA.EF.Models.Product>
+﻿@*@model IEnumerable<StoreFrontV2.DATA.EF.Models.Product>*@
+
+@model IPagedList<StoreFrontV2.DATA.EF.Models.Product>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
 
 @{
     ViewData["Title"] = "Tiled Products";
@@ -26,8 +30,42 @@
 <section>
     <div class="container">
         <div class="row">
+
+				
+
+
+
                 <div class="col-sm-3">
 					<div class="left-sidebar">
+					<div class="panel">
+						<form asp-action="TiledProducts" method="get">
+
+							@*
+							Categories Filter Dropdown
+							*@
+							@*<label for="CategoryId" class="control-label d-block text-center">Filter by Category</label>
+							<select name="categoryId" class="form-control text-center mb-3" asp-items="ViewBag.CategoryId">
+							<option value="0">[Choose a Category]</option>
+							</select>*@
+
+							@*
+							Inputs for search
+							*@
+							<div>
+								<input type="text" name="searchTerm" class="form-control w-100 text-center" placeholder="Search" />
+								<input type="submit" value="Go" class="btn btn-primary text-center w-50 d-block" />
+							</div>
+						</form>
+
+						@if (ViewBag.NbrResults != null)
+						{
+							<p class="mt-5 p-2 alert-warning text-center">
+								Showing @ViewBag.NbrResults result@(ViewBag.NbrResults > 1 ? "s" : "") for '@ViewBag.SearchTerm'
+							</p>
+						}
+
+
+					</div>
 						<h2>Category</h2>
 						<div class="panel-group category-products" id="accordian"><!--category-productsr-->
 							<div class="panel panel-default">
@@ -96,7 +134,7 @@
 									<h4 class="panel-title">
 										<a data-toggle="collapse" data-parent="#accordian" href="#lizard">
 											<span class="badge pull-right"><i class="fa fa-plus"></i></span>
-											Lizard
+											Reptile
 										</a>
 									</h4>
 								</div>
@@ -122,6 +160,17 @@
 					</div>
 				</div>
 
+
+
+
+
+
+			
+
+
+
+
+
             <!--Products section-->
             <div class="col-sm-9 padding-right">
                 <div class="features_items">
@@ -133,16 +182,16 @@
                                 <div class="single-products">
                                     <div class="productinfo text-center">
 										<!--TODO add back item.ProductImage when get all pictures. current is a placeholder-->
-                                        <img src="~/images/okeykat-w6elADh_jww-unsplash.jpg" alt="@item.ProductDescription" />
+                                        <img src="~/images/@item.ProductImage" alt="@item.ProductDescription" />
                                         <h2>@Html.DisplayFor(modelItem => item.ProductPrice)</h2>
                                         <p>@item.ProductName</p>
-                                        <a class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                        <a asp-action="AddToCart" asp-controller="ShoppingCart" asp-route-id="@item.ProductId" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
                                     </div>
                                     <div class="product-overlay">
                                         <div class="overlay-content">
 											<h2>@Html.DisplayFor(modelItem => item.ProductPrice)</h2>
                                             <p>@item.ProductName</p>
-                                            <a href="javascript:void(0)" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+                                            <a asp-action="AddToCart" asp-controller="ShoppingCart" asp-route-id="@item.ProductId" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
                                             <a asp-action="Details" asp-route-id="@item.ProductId" class="btn btn-default add-to-cart">Details</a>
                                         </div>
                                     </div>
@@ -160,8 +209,23 @@
 
                 </div>
             </div>
+
+			
+
         </div>
     </div>
+	<div class="row mt-5 text-center">
+		<div class="w-50 mx-auto">
+			Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+		</div>
+		<div class="w-100">
+			@Html.PagedListPager(
+			Model,
+			page => Url.Action("TiledProducts",
+			new { page, searchTerm = ViewBag.SearchTerm, categoryId = ViewBag.Category })
+			)
+		</div>
+	</div>
 </section>
 
 
@@ -185,76 +249,3 @@
 
 
 
-
-@*<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductDescription)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.QtyInStock)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.QtyOnOrder)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductImage)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Supplier)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductDescription)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QtyInStock)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QtyOnOrder)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductImage)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.CategoryName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status.StatusName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Supplier.City)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>*@

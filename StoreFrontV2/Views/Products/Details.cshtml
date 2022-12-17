@@ -15,7 +15,7 @@
         		<div class="col-sm-5">
         			<div class="view-product">
         				@*add Model.ProductImage when get photos*@
-        				<img src="~/images/okeykat-w6elADh_jww-unsplash.jpg" alt="@Model.ProductDescription" />
+        				<img src="~/images/@Model.ProductImage" alt="@Model.ProductDescription" />
         			</div>
         		</div>
         		<div class="col-sm-7">
@@ -35,7 +35,7 @@
         				<p><b>Availability:</b> @Model.Status.StatusName</p>
         				<p><b>Brand:</b> @Model.Supplier.SupplierName</p>
                         <div>
-                            <a asp-action="TiledProducts" class="btn btn-success">Back to Products</a>
+                            <a asp-action="TiledProducts" class="btn btn-primary">Back to Products</a>
                         </div>
         			</div><!--/product-information-->
         		</div>

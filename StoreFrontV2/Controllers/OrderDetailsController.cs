@@ -25,7 +25,7 @@ namespace StoreFrontV2.Controllers
         // GET: OrderDetails
         public async Task<IActionResult> Index()
         {
-            var storeFrontContext = _context.OrderDetails.Include(o => o.Customer).Include(o => o.Product).Include(o => o.Shipper);
+            var storeFrontContext = _context.OrderDetails.Include(o => o.Customer)/*.Include(o => o.Shipper)/*.Include(o => o.ProductId)*/;
             return View(await storeFrontContext.ToListAsync());
         }
 
@@ -39,8 +39,8 @@ namespace StoreFrontV2.Controllers
 
             var orderDetail = await _context.OrderDetails
                 .Include(o => o.Customer)
-                .Include(o => o.Product)
-                .Include(o => o.Shipper)
+                //.Include(o => o.Product)
+                //.Include(o => o.Shipper)
                 .FirstOrDefaultAsync(m => m.OrderId == id);
             if (orderDetail == null)
             {
@@ -54,8 +54,8 @@ namespace StoreFrontV2.Controllers
         public IActionResult Create()
         {
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "CustomerId");
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductId");
-            ViewData["ShipperId"] = new SelectList(_context.Shippers, "ShipperId", "ShipperId");
+            //ViewData["ShipperId"] = new SelectList(_context.Shippers, "ShipperId", "ShipperId");
+            //ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductName");
             return View();
         }
 
@@ -64,7 +64,7 @@ namespace StoreFrontV2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderId,CustomerId,ShipperId,ProductId,ShipperName,ShippedCity,ShippedState,ShippedCountry,OrderDate,ShippingCost")] OrderDetail orderDetail)
+        public async Task<IActionResult> Create([Bind("OrderId,CustomerId,ShipperName,ShippedCity,ShippedState,ShippedCountry,OrderDate,ShippingCost")] OrderDetail orderDetail)
         {
             if (ModelState.IsValid)
             {
@@ -73,8 +73,8 @@ namespace StoreFrontV2.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "CustomerId", orderDetail.CustomerId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductId", orderDetail.ProductId);
-            ViewData["ShipperId"] = new SelectList(_context.Shippers, "ShipperId", "ShipperId", orderDetail.ShipperId);
+            //ViewData["ShipperId"] = new SelectList(_context.Shippers, "ShipperId", "ShipperId", orderDetail.ShipperId);
+            //ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductName");
             return View(orderDetail);
         }
 
@@ -92,8 +92,8 @@ namespace StoreFrontV2.Controllers
                 return NotFound();
             }
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "CustomerId", orderDetail.CustomerId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductId", orderDetail.ProductId);
-            ViewData["ShipperId"] = new SelectList(_context.Shippers, "ShipperId", "ShipperId", orderDetail.ShipperId);
+            //ViewData["ShipperId"] = new SelectList(_context.Shippers, "ShipperId", "ShipperId", orderDetail.ShipperId);
+            //ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductName");
             return View(orderDetail);
         }
 
@@ -102,7 +102,7 @@ namespace StoreFrontV2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,CustomerId,ShipperId,ProductId,ShipperName,ShippedCity,ShippedState,ShippedCountry,OrderDate,ShippingCost")] OrderDetail orderDetail)
+        public async Task<IActionResult> Edit(int id, [Bind("OrderId,CustomerId,ShipperName,ShippedCity,ShippedState,ShippedCountry,OrderDate,ShippingCost")] OrderDetail orderDetail)
         {
             if (id != orderDetail.OrderId)
             {
@@ -130,8 +130,8 @@ namespace StoreFrontV2.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "CustomerId", orderDetail.CustomerId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductId", orderDetail.ProductId);
-            ViewData["ShipperId"] = new SelectList(_context.Shippers, "ShipperId", "ShipperId", orderDetail.ShipperId);
+            //ViewData["ShipperId"] = new SelectList(_context.Shippers, "ShipperId", "ShipperId", orderDetail.ShipperId);
+            //ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductName");
             return View(orderDetail);
         }
 
@@ -145,8 +145,8 @@ namespace StoreFrontV2.Controllers
 
             var orderDetail = await _context.OrderDetails
                 .Include(o => o.Customer)
-                .Include(o => o.Product)
-                .Include(o => o.Shipper)
+                //.Include(o => o.Product)
+                //.Include(o => o.Shipper)
                 .FirstOrDefaultAsync(m => m.OrderId == id);
             if (orderDetail == null)
             {

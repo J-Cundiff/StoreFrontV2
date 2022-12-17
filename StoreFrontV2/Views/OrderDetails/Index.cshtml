@@ -4,77 +4,70 @@
     ViewData["Title"] = "Order Details";
 }
 
-<h1>Order Details</h1>
+<h2 class="title text-center">Order Details</h2>
 
-<p>
+@*<p>
     <a asp-action="Create">Add Order Details</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ShipperName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ShippedCity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ShippedState)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ShippedCountry)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ShippingCost)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Customer)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Product)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-                <td>
-                    <a asp-action="OrderDetails" asp-route-id="@item.OrderId">
-                @Html.DisplayFor(modelItem => item.ShipperName)
-                    </a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ShippedCity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ShippedState)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ShippedCountry)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ShippingCost)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Customer.CustomerId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.ProductName)
-            </td>
-           
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
-                @*<a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |*@
-                <a asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+</p>*@
+
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.OrderDate)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.Customer)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ShippedCity)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ShippedState)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ShippedCountry)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderDate)
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-controller="Customers" asp-route-id="@item.Customer.CustomerId">
+                                @Html.DisplayFor(modelItem => item.Customer.CustomerId)
+                            </a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShippedCity)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShippedState)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShippedCountry)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
+                            @*<a asp-action="Details" asp-route-id="@item.OrderId">Details</a> |*@
+                            <a asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+

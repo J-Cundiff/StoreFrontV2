@@ -191,4 +191,5 @@ namespace StoreFrontV2.DATA.EF.Models/*Metadata*/
         [Display(Name = "Description")]
         public string? SupplierDescription { get; set; }
     }
+
 }
