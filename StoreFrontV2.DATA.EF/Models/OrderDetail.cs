@@ -12,6 +12,7 @@ namespace StoreFrontV2.DATA.EF.Models
 
         public int OrderId { get; set; }
         public string CustomerId { get; set; } = null!;
+        public int ProductId { get; set; }
         public string ShipperName { get; set; } = null!;
         public string ShippedCity { get; set; } = null!;
         public string? ShippedState { get; set; }

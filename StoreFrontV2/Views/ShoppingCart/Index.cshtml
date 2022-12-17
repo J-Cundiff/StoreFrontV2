@@ -1,0 +1,174 @@
+﻿@model Dictionary<int, CartItemViewModel>
+@{
+    ViewData["Title"] = "Shopping Cart";
+
+    decimal? cartTotal = 0;
+    
+}
+
+
+<section id="cart_items">
+	<div class="container">
+		<div class="breadcrumbs">
+			<ol class="breadcrumb">
+			  <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+			  <li class="active">Shopping Cart</li>
+			</ol>
+		</div>
+
+		@if (Model.Count() == 0)
+		{
+			<p class="alert-warning text-center">
+				@ViewBag.Message
+			</p>
+		}
+		else
+		{
+			<div class="table-responsive cart_info">
+				<table class="table table-condensed">
+					<thead>
+						<tr class="cart_menu">
+							<td class="image">Item</td>
+							<td class="description"></td>
+							<td class="price">Price</td>
+							<td class="quantity">Quantity</td>
+							<td class="total">Total</td>
+							<td></td>
+						</tr>
+					</thead>
+					<tbody>
+						
+						@foreach (var item in Model)
+						{
+							<tr>
+								<td class="cart_product">
+									<a href=""><img src="~/images/t_@item.Value.Product.ProductImage" alt="@item.Value.Product.ProductName"></a>
+								</td>
+								<td class="cart_description text-center">
+									<h4><a asp-action="Details" asp-controller="Products" asp-route-id="@item.Key">@item.Value.Product.ProductName</a></h4>
+								</td>
+								<td class="cart_price text-center">
+									<p>@string.Format($"{item.Value.Product.ProductPrice:c}")</p>
+								</td>
+								<td class="cart_quantity">
+									<form asp-action="UpdateCart">
+										@*<a class="cart_quantity_up" href=""> + </a>*@
+											<input type="hidden" name="productId" value="@item.Key" />
+											<input type="text" name="qty" value="@item.Value.Qty" class="form-control d-block mx-auto w-25 text-center" />
+											@*<input class="cart_quantity_input" type="text" name="quantity" value="@item.Value.Qty" autocomplete="off" size="2">*@
+											@*<a class="cart_quantity_down" href=""> - </a>*@
+									
+										<input type="submit" value="Update Cart" class="btn btn-primary btn-sm" />
+									</form>
+									
+								</td>
+							
+								<td class="cart_total">
+									@{
+									decimal? lineTotal = item.Value.Product.ProductPrice * item.Value.Qty;
+									cartTotal += lineTotal;
+									}
+									<p class="cart_total_price">@string.Format($"{lineTotal:c}")</p>
+								</td>
+								<td class="cart_delete">
+									<a class="cart_quantity_delete" asp-action="RemoveFromCart" asp-route-id="@item.Key"><i class="fa fa-times"></i></a>
+								</td>
+							</tr>
+						}
+
+						
+					</tbody>
+				</table>
+			</div>
+		}
+	</div>
+</section> <!--/#cart_items-->
+
+	<section id="do_action">
+		<div class="container">
+			
+			<div class="row">
+				@*<div class="col-sm-6">
+					<div class="chose_area">
+						<ul class="user_option">
+							<li>
+								<input type="checkbox">
+								<label>Use Coupon Code</label>
+							</li>
+							<li>
+								<input type="checkbox">
+								<label>Use Gift Voucher</label>
+							</li>
+							<li>
+								<input type="checkbox">
+								<label>Estimate Shipping & Taxes</label>
+							</li>
+						</ul>
+						<ul class="user_info">
+							<li class="single_field">
+								<label>Country:</label>
+								<select>
+									<option>United States</option>
+									<option>Bangladesh</option>
+									<option>UK</option>
+									<option>India</option>
+									<option>Pakistan</option>
+									<option>Ucrane</option>
+									<option>Canada</option>
+									<option>Dubai</option>
+								</select>
+								
+							</li>
+							<li class="single_field">
+								<label>Region / State:</label>
+								<select>
+									<option>Select</option>
+									<option>Dhaka</option>
+									<option>London</option>
+									<option>Dillih</option>
+									<option>Lahore</option>
+									<option>Alaska</option>
+									<option>Canada</option>
+									<option>Dubai</option>
+								</select>
+							
+							</li>
+							<li class="single_field zip-field">
+								<label>Zip Code:</label>
+								<input type="text">
+							</li>
+						</ul>
+						<a class="btn btn-default update" href="">Get Quotes</a>
+						<a class="btn btn-default check_out" href="">Continue</a>
+					</div>
+				</div>*@
+				<div class="col-sm-6 col-sm-offset-3">
+					<div class="total_area">
+						<ul>
+							@*<li>Cart Sub Total <span>@string.Format($"{cartTotal:c}")</span></li>*@
+							<li>Eco Tax <span>$0</span></li>
+							<li>Shipping Cost <span>Free</span></li>
+							<li>Total <span>@string.Format($"{cartTotal:c}")</span></li>
+						</ul>
+						<div class="text-center">
+							@if (User.Identity.IsAuthenticated)
+							{
+								<a asp-action="SubmitOrder" class="btn btn-primary">
+									Submit Order
+								</a>
+							}
+							else
+							{
+								<p>
+									To place this order you must be logged in.
+								</p>
+								<button disabled="disabled" class="btn btn-primary">
+									Submit Order
+								</button>
+							}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section><!--/#do_action-->
