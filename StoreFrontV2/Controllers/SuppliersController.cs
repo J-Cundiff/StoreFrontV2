@@ -27,45 +27,69 @@ namespace StoreFrontV2.Controllers
               return View(await _context.Suppliers.ToListAsync());
         }
 
-        // GET: Suppliers/Details/5
-        public async Task<IActionResult> Details(int? id)
+        #region AJAX Actions
+        public PartialViewResult SupplierDetails(int id)
         {
-            if (id == null || _context.Suppliers == null)
-            {
-                return NotFound();
-            }
+            var supplier = _context.Suppliers.Find(id);
 
-            var supplier = await _context.Suppliers
-                .FirstOrDefaultAsync(m => m.SupplierId == id);
-            if (supplier == null)
-            {
-                return NotFound();
-            }
-
-            return View(supplier);
+            return PartialView(supplier);
         }
 
-        // GET: Suppliers/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Suppliers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SupplierId,SupplierName,City,State,Country,Phone,SupplierDescription")] Supplier supplier)
+        public JsonResult AjaxCreate(Supplier supplier)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(supplier);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(supplier);
+            _context.Suppliers.Add(supplier);
+            _context.SaveChanges();
+            return Json(supplier);
         }
+
+
+        #endregion
+
+
+
+        #region Original EF Actions
+
+        // GET: Suppliers/Details/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null || _context.Suppliers == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var supplier = await _context.Suppliers
+        //        .FirstOrDefaultAsync(m => m.SupplierId == id);
+        //    if (supplier == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(supplier);
+        //}
+
+        // GET: Suppliers/Create
+        //public IActionResult Create()
+        //{
+        //    return View();
+        //}
+
+        //// POST: Suppliers/Create
+        //// To protect from overposting attacks, enable the specific properties you want to bind to.
+        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("SupplierId,SupplierName,City,State,Country,Phone,SupplierDescription")] Supplier supplier)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _context.Add(supplier);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    return View(supplier);
+        //}
 
         // GET: Suppliers/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -155,9 +179,16 @@ namespace StoreFrontV2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        #endregion
+
         private bool SupplierExists(int id)
         {
           return _context.Suppliers.Any(e => e.SupplierId == id);
         }
+
+
+
+
     }
 }

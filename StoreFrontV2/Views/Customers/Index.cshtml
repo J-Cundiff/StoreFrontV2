@@ -6,12 +6,30 @@
 
 <h2 class="title text-center">@ViewData["Title"]</h2>
 
-<div class="row text-center">
-    <a asp-action="Create" class="btn btn-primary mb-5">Create New</a>
-</div>
 <div class="row">
-    <div class="col-md-8 col-md-offset-2">
-        <table class="table">
+    <div align="center" class="col-md-6 col-md-offset-3 mb-3">
+        <button id="ToggleCustomerCreate" class="btn btn-primary">
+            Add New Customer
+        </button>
+    </div>
+</div>
+
+<div id="CustomerCreate">
+    <partial name="CustomerCreate" model="new StoreFrontV2.DATA.EF.Models.Customer()" />
+</div>
+
+<div class="row text-center">
+    <div class="col-md-offset-3 col-md-6">
+        <div id="MessageContent" class="text-center"></div>
+    </div>
+</div>
+
+@*<div class="row text-center">
+    <a asp-action="Create" class="btn btn-primary mb-5">Create New</a>
+</div>*@
+<div class="row">
+    <div class="col-md-8 col-md-offset-2" id="customerContainer">
+        <table class="table" id="CustomersTable">
             <thead>
                 <tr>
                     <th>
@@ -45,14 +63,16 @@
                 @foreach (var item in Model) {
                         <tr>
                             <td>
-                                <a asp-action="Details" asp-route-id="@item.CustomerId" >
-                                @Html.DisplayFor(modelItem => item.FirstName)
-                                    </a>
+                                <button type="button" class="DetailsLink btn btn-link" id="@item.CustomerId"
+                                data-toggle="modal" data-target="#CustomerDetails">
+                                    @Html.DisplayFor(modelItem => item.FirstName)
+                                </button>
                             </td>
                             <td>
-                                <a asp-action="Details" asp-route-id="@item.CustomerId" >
-                                @Html.DisplayFor(modelItem => item.LastName)
-                                </a>
+                                <button type="button" class="DetailsLink btn btn-link" id="@item.CustomerId"
+                                data-toggle="modal" data-target="#CustomerDetails">
+                                    @Html.DisplayFor(modelItem => item.LastName)
+                                </button>
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Address)
@@ -84,12 +104,81 @@
     </div>
 </div>
 
+@* Modal for AJAX Details *@
+<div class="modal fade" id="CustomerDetails" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content"  id="customerContainerDetails">
+            <div class="modal-header">
+                <h5 class="modal-title title text-center" id="exampleModalLabel">Details</h5>
+            </div>
+            <div class="modal-body" id="DetailsBody">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section scripts {
     <script>
 
         $(document).ready(function () {
             //Update the selector in the function to taget the element with the class of table
             $('.table').DataTable();
+        });
+
+        //***** AJAX DETAILS *****//
+        $(".DetailsLink").on("click", function (e) {
+            let customerId = $(this).attr("id");
+
+            $("#CustomerDetails .modal-body").load("/Customers/CustomerDetails/" + customerId);
+        });
+
+
+        //****** AJAX Create ******//
+        //Hide on page load
+        $("#CustomerCreate").hide();
+        $("#ToggleCustomerCreate").on("click", function () {
+            $("#CustomerCreate").toggle();
+        });
+
+        $("#CustomerCreateForm").on("submit", function (e) {
+
+            e.preventDefault();
+
+            let formData = $(this).serializeArray();
+            console.log(formData);
+
+            $.ajax({
+                url: "/Customers/AjaxCreate",
+                type: "POST",
+                data: formData,
+                dataType: "json",
+                error: function (e) {
+                    $("#MessageContent").html("<div class='alert alert-danger'>There was a problem...</div>");
+                },
+                success: function (customer) {
+                    $("#MessageContent").html("<div class='alert alert-success'>Customer Added!</div>");
+                    $("#CustomerCreateForm")[0].reset();
+                    $(function () {
+                        let row = "<tr id='Customer-" + customer.customerId + "'><td>" + customer.firstName +
+                            "</td><td>" + customer.lastName +
+                            "</td><td>" + customer.address +
+                            "</td><td>" + customer.city +
+                            "</td><td>" + customer.state +
+                            "</td><td>" + customer.zip +
+                            "</td><td>" + customer.country +
+                            "</td><td>" + customer.phone +
+                            "</td><td> Refresh page for options</td></tr>";
+                        $("#CustomersTable").append(row);
+                        $("#CustomerCreate").hide();
+                    });
+                }
+
+            });
+
+
         });
     </script>
 

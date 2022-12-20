@@ -1,15 +1,11 @@
 ﻿@model StoreFrontV2.DATA.EF.Models.Supplier
 
-@{
-    ViewData["Title"] = "Edit " + Model.SupplierName;
-}
-
-<h2 class="title text-center">@ViewData["Title"]</h2>
+@*<h4>Supplier</h4>
+<hr />*@
 <div class="row">
     <div class="col-md-4 col-md-offset-4" id="supplierContainer">
-        <form asp-action="Edit">
+        <form asp-action="SupplierCreate" method="post" id="SupplierCreateForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="SupplierId" />
             <div class="form-group">
                 <label asp-for="SupplierName" class="control-label"></label>
                 <input asp-for="SupplierName" class="form-control" />
@@ -41,14 +37,15 @@
                 <span asp-validation-for="SupplierDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-primary">Back to Suppliers</a>
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-
+@*<div>
+    <a asp-action="Index">Back to List</a>
+</div>*@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

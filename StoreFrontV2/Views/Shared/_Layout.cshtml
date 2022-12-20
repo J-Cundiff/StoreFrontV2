@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Newtonsoft.Json
 @inject SignInManager<IdentityUser> signInManager
 <!DOCTYPE html>
 <html lang="en">
@@ -15,6 +16,8 @@
 	<link href="~/css/animate.css" rel="stylesheet">
 	<link href="~/css/main.css" rel="stylesheet">
 	<link href="~/css/responsive.css" rel="stylesheet">
+	<!--Custom CSS-->
+	<link href="~/css/cutom.css" rel="stylesheet" >
 	@*The DataTable stylesheet was pulled from https://datatables.net*@
 	<!-- DataTables-->
 	<link href="//cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet" />
@@ -32,55 +35,25 @@
 
 <body>
 <header>
-	@*<div class="header-middle">
-		<!--header-middle-->
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-4">
-					<div class="logo pull-left">
-						<a href="@Url.Action("Index", "Home")"><img src="~/images/PetExpress-logos_blackv2.png" alt="" /></a>
+
+		<!-- navigation -->
+
+		<div class="container mb-5">
+			<div class="navbar navbar-default navbar-sticky-top mb-5" role="navigation">
+				<div>
+					<button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="icon icon-bar"></span>
+						<span class="icon icon-bar"></span>
+						<span class="icon icon-bar"></span>
+					</button>
+				</div>
+				<div class="navbar-header">
+					<div class="col collapse navbar-collapse">
+						<a href="@Url.Action("Index", "Home")"><img src="~/images/PetExpress-logos_blackv2.png" alt="Pet Express Logo" /></a>
 					</div>
 				</div>
-				@*<div class="col-sm-8">
-					<div class="shop-menu pull-right">
-						<ul class="nav navbar-nav">
-							<li><a href="#"><i class="fa fa-user"></i> Account</a></li>
-							<li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
-							<li><a href="@Url.Action("Checkout", "Home")"><i class="fa fa-crosshairs"></i> Checkout</a></li>
-							<li><a href="@Url.Action("Cart", "Home")"><i class="fa fa-shopping-cart"></i> Cart</a></li>
-							@*<li><a href="login.html"><i class="fa fa-lock"></i> Login</a></li>*/@
-						</ul>
-							
-							
-				
-
-							
-					</div>
-				</div>*/@
-			</div>
-		</div>
-	</div><!--/header-middle-->*@
-
-	<div class="header-bottom">
-		<!--header-bottom-->
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-9">
-					<div class="navbar-header">
-						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-							<span class="sr-only">Toggle navigation</span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-						</button>
-					</div>
-					<div class="col-sm-4">
-						<div class="logo pull-left">
-							<a href="@Url.Action("Index", "Home")"><img src="~/images/PetExpress-logos_blackv2.png" alt="Pet Express Logo" /></a>
-						</div>
-					</div>
-					<div class="mainmenu pull-left">
-						<ul class="nav navbar-nav collapse navbar-collapse">
+				<div class="collapse navbar-collapse">
+					<ul class="nav navbar-nav navbar-right">
 							<li>@Html.ActionLink("Home", "Index", "Home")</li>
 							<li>
 								@if (User.IsInRole("Admin"))
@@ -92,13 +65,13 @@
 									@Html.ActionLink("Shop", "TiledProducts", "Products")
 								}
 							</li>
-							<li>@Html.ActionLink("Shopping Cart", "Index", "ShoppingCart")</li>
 							<li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+							
 							@if (User.IsInRole("Admin"))
 							{
 								<li class="nav-item dropdown">
 									<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"> <span class="nav-label">Admin</span> <span class="caret"></span></a>
-									<ul class="dropdown-menu">
+								<ul class="dropdown-menu nav navbar-nav">
 										<li class="nav-item">
 											<a class="nav-link" asp-action="ListUsers" asp-controller="Administration">Users</a>
 										</li>
@@ -117,22 +90,59 @@
 										<li class="nav-item">
 											<a class="nav-link" asp-action="Index" asp-controller="Customers">Customers</a>
 										</li>
-										<li class="nav-item">
-											<a class="nav-link" asp-action="Index" asp-controller="OrderDetails">Orders</a>
-										</li>
 									</ul>
 								</li>
-
-
-
 							}
-							<li><partial name="_LoginPartial" /></li>
-						</ul>
-					</div>
+						<li class="nav-item" id="partialLogin">
+							<partial name="_LoginPartial" class="nav-link" />
+						</li>
+						<li>
+							@{
+								//Create a bool to determine if there are items in the cart
+								bool cartHasProducts = false;
+
+								//Create an int to store the number of products
+								int productCount = 0;
+
+								//Check if the "cart" string exists in the Session
+								if (!string.IsNullOrEmpty(Context.Session.GetString("cart")))
+								{
+									//If so, there are items in the cart -- flip the bool
+									cartHasProducts = true;
+
+									//Create the Dictionary to hold the cart items
+									var products = new Dictionary<int, CartItemViewModel>();
+
+									//Deserialize the session cart & store it in the dictionary
+									products = JsonConvert.DeserializeObject<Dictionary<int, CartItemViewModel>>(Context.Session.GetString("cart"));
+
+									//Create a variable and assign the sum of the Qty of CartItems
+									productCount = products.Sum(p => p.Value.Qty);
+
+								}
+							}
+							<a asp-action="Index" asp-controller="ShoppingCart">
+								<i class="fa fa-shopping-cart"></i> Cart
+								@if (cartHasProducts)
+								{
+									<sup style="
+                                            color: white;
+                                            background-color: red;
+                                            border-radius: 40%;
+                                            display: inline-block;
+                                            text-align: center;
+                                            height: .3em;
+                                            padding: .3em;">
+										@productCount
+									</sup>
+								}
+							</a>
+						</li>
+						
+					</ul>
 				</div>
 			</div>
 		</div>
-	</div><!--/header-bottom-->
 </header><!--/header-->
 
 	@RenderBody()
@@ -142,20 +152,18 @@
 
 		<div class="footer-widget">
 			<div class="container">
-				<div class="row">
-					<div class="col-sm-4">
+				<div class="row text-center">
+					<div class="col-sm-6">
 						<div class="single-widget">
 							<h2>Service</h2>
 							<ul class="nav nav-pills nav-stacked">
-								<li><a href="#">Online Help</a></li>
 								<li><a href="#">Contact Us</a></li>
 								<li><a href="#">Order Status</a></li>
-								<li><a href="#">Change Location</a></li>
 								<li><a href="#">FAQ’s</a></li>
 							</ul>
 						</div>
 					</div>
-					<div class="col-sm-4">
+					@*<div class="col-sm-4">
 						<div class="single-widget">
 							<h2>Links</h2>
 							<ul class="nav nav-pills nav-stacked">
@@ -166,15 +174,13 @@
 								<li>@Html.ActionLink("Suppliers", "Index", "Suppliers")</li>
 							</ul>
 						</div>
-					</div>
-					<div class="col-sm-4">
+					</div>*@
+					<div class="col-sm-6">
 						<div class="single-widget">
-							<h2>About Shopper</h2>
+							<h2>About PetExpress</h2>
 							<ul class="nav nav-pills nav-stacked">
 								<li><a href="#">Company Information</a></li>
-								<li><a href="#">Careers</a></li>
 								<li><a href="#">Store Location</a></li>
-								<li><a href="#">Affillate Program</a></li>
 								<li><a href="#">Copyright</a></li>
 							</ul>
 						</div>
@@ -196,8 +202,8 @@
 
 		<div class="footer-bottom">
 			<div class="container">
-				<div class="row">
-					<p class="pull-left">Copyright © @DateTime.Now.Year PetExpress Inc. All rights reserved.</p>
+				<div class="row text-center">
+					<p >Copyright © @DateTime.Now.Year PetExpress Inc. All rights reserved.</p>
 					@*<p class="pull-right">Designed by <span><a target="_blank" href="http://www.themeum.com">Themeum</a></span></p>*@
 				</div>
 			</div>
@@ -211,6 +217,8 @@
 
 	<!--DataTables-->
 	<script src="//cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+	<!-- AJAX -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js" integrity="sha512-DedNBWPF0hLGUPNbCYfj8qjlEnNE92Fqn7xd3Sscfu7ipy7Zu33unHdugqRD3c4Vj7/yLv+slqZhMls/4Oc7Zg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script src="~/js/bootstrap.min.js"></script>
 	<script src="~/js/jquery.scrollUp.min.js"></script>
 	<script src="~/js/price-range.js"></script>

@@ -1,14 +1,9 @@
 ﻿@model StoreFrontV2.DATA.EF.Models.Category
 
-@{
-    ViewData["Title"] = Model.CategoryName + " Details";
-}
-
-<h2 class="title text-center">@ViewData["Title"]</h2>
-
-<div class="row">
-    
-    <dl class="col-md-9 col-md-offset-4" id="orderDetailContainer">
+<div>
+    @*<h4>Category</h4>
+    <hr />*@
+    <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.CategoryName)
         </dt>
@@ -21,10 +16,9 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CategoryDescription)
         </dd>
-        <dd>
-            <a asp-action="Edit" class="btn btn-primary" asp-route-id="@Model?.CategoryId">Edit</a>
-            <a asp-action="Index" class="btn btn-success">Back to Categories</a>
-        </dd>
     </dl>
 </div>
-
+@*<div>
+    <a asp-action="Edit" asp-route-id="@Model?.CategoryId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>*@

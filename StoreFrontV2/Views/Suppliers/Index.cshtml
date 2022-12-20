@@ -6,12 +6,31 @@
 
 <h2 class="title text-center">Suppliers</h2>
 
-<div class="row text-center">
+@*<div class="row text-center">
     <a asp-action="Create" class="btn btn-primary mb-5">Add Supplier</a>
-</div>
+</div>*@
 <div class="row">
-    <div class="col-md-10 col-md-offset-1">
-        <table class="table">
+    <div align="center" class="col-md-6 col-md-offset-3 mb-3">
+        <button id="ToggleSupplierCreate" class="btn btn-primary">
+            Add New Supplier
+        </button>
+    </div>
+</div>
+
+<div id="SupplierCreate">
+    <partial name="SupplierCreate" model="new StoreFrontV2.DATA.EF.Models.Supplier()" />
+</div>
+
+<div class="row text-center">
+    <div class="col-md-offset-3 col-md-6">
+        <div id="MessageContent" class="text-center"></div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-10 col-md-offset-1" id="supplierContainer">
+        <table class="table" id="SuppliersTable"> 
             <thead>
                 <tr>
                     <th>
@@ -39,9 +58,11 @@
                 @foreach (var item in Model) {
                     <tr>
                         <td>
-                            <a asp-action="Details" asp-route-id="@item.SupplierId">
-                            @Html.DisplayFor(modelItem => item.SupplierName)
-                            </a>
+                            @*<a asp-action="Details" asp-route-id="@item.SupplierId">*@
+                            <button type="button" class="DetailsLink btn btn-link" id="@item.SupplierId"
+                                data-toggle="modal" data-target="#SupplierDetails">
+                                @Html.DisplayFor(modelItem => item.SupplierName)
+                            </button>
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.City)
@@ -60,7 +81,7 @@
                         </td>
                         <td>
                             <a asp-action="Edit" asp-route-id="@item.SupplierId">Edit</a> |
-                            @*<a asp-action="Details" asp-route-id="@item.SupplierId">Details</a> |*@
+
                             <a asp-action="Delete" asp-route-id="@item.SupplierId">Delete</a>
                         </td>
                     </tr>
@@ -69,6 +90,27 @@
         </table>
     </div>
 </div>
+
+
+
+@* Modal for AJAX Details *@
+<div class="modal fade" id="SupplierDetails" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" >
+        <div class="modal-content" id="supplierContainerDetails">
+            <div class="modal-header">
+                <h3 class="modal-title text-center" id="exampleModalLabel">Details</h3>
+            </div>
+            <div class="modal-body" id="DetailsBody">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 @section scripts {
 	<script>
 
@@ -76,6 +118,59 @@
 			//Update the selector in the function to taget the element with the class of table
 			$('.table').DataTable();
 		});
+
+        //***** AJAX DETAILS *****//
+        $(".DetailsLink").on("click", function(e) {
+                let supplierId = $(this).attr("id");
+
+                $("#SupplierDetails .modal-body").load("/Suppliers/SupplierDetails/" + supplierId);
+        });
+
+
+        $("#SupplierCreate").hide();
+        $("#ToggleSupplierCreate").on("click", function() {
+            $("#SupplierCreate").toggle();
+        });
+
+        $("#SupplierCreateForm").on("submit", function (e) {
+            
+            e.preventDefault();
+
+            let formData = $(this).serializeArray();
+            console.log(formData);
+
+            $.ajax({
+                url: "/Suppliers/AjaxCreate",
+                type: "POST",
+                data: formData,
+                dataType: "json",
+                error: function(e) {
+                    $("#MessageContent").html("<div class='alert alert-danger'>There was a problem...</div>");
+                },
+                success: function(supplier) {
+                    $("#MessageContent").html("<div class='alert alert-success'>Supplier Added!</div>");
+                    $("#SupplierCreateForm")[0].reset();
+                    $(function(){
+                        let row = "<tr id='Supplier-" + supplier.supplierId + "'><td>" + supplier.supplierName + 
+                        "</td><td>" + supplier.city +
+                        "</td><td>" + supplier.state + 
+                        "</td><td>" + supplier.country +
+                        "</td><td>" + supplier.phone +
+                        "</td><td>" + suppleir.supplierDescription +
+                        "</td><td> Refresh page for options</td></tr>";
+                        $("#SuppliersTable").append(row);
+                        $("#SupplierCreate").hide();
+                    });
+                }
+
+            });
+
+
+        });
+
+
+        
+
 	</script>
 
 } 
