@@ -24,7 +24,7 @@
 		}
 		else
 		{
-			<div class="table-responsive cart_info">
+			<div class="table-responsive cart_info" id="shoppingCartContainer">
 				<table class="table table-condensed">
 					<thead>
 						<tr class="cart_menu">
@@ -153,7 +153,7 @@
 						<div class="text-center">
 							@if (User.Identity.IsAuthenticated)
 							{
-								<a asp-action="SubmitOrder" class="btn btn-primary">
+								<a asp-action="SubmitOrder" class="btn btn-success">
 									Submit Order
 								</a>
 							}
@@ -162,7 +162,7 @@
 								<p>
 									To place this order you must be logged in.
 								</p>
-								<button disabled="disabled" class="btn btn-primary">
+								<button disabled="disabled" class="btn btn-success">
 									Submit Order
 								</button>
 							}

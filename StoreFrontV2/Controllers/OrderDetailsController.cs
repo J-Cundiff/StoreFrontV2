@@ -29,26 +29,40 @@ namespace StoreFrontV2.Controllers
             return View(await storeFrontContext.ToListAsync());
         }
 
-        // GET: OrderDetails/Details/5
-        public async Task<IActionResult> Details(int? id)
+        #region AJAX Actions
+
+        public PartialViewResult OrderDetails(int id)
         {
-            if (id == null || _context.OrderDetails == null)
-            {
-                return NotFound();
-            }
-
-            var orderDetail = await _context.OrderDetails
-                .Include(o => o.Customer)
-                //.Include(o => o.Product)
-                //.Include(o => o.Shipper)
-                .FirstOrDefaultAsync(m => m.OrderId == id);
-            if (orderDetail == null)
-            {
-                return NotFound();
-            }
-
-            return View(orderDetail);
+            var orderDetails = _context.OrderDetails.Find(id);
+            return PartialView(orderDetails);
         }
+
+
+
+        #endregion
+
+        #region Original EF Actions
+
+        // GET: OrderDetails/Details/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null || _context.OrderDetails == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var orderDetail = await _context.OrderDetails
+        //        .Include(o => o.Customer)
+        //        //.Include(o => o.Product)
+        //        //.Include(o => o.Shipper)
+        //        .FirstOrDefaultAsync(m => m.OrderId == id);
+        //    if (orderDetail == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(orderDetail);
+        //}
 
         // GET: OrderDetails/Create
         public IActionResult Create()
@@ -59,9 +73,10 @@ namespace StoreFrontV2.Controllers
             return View();
         }
 
-        // POST: OrderDetails/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //POST: OrderDetails/Create
+        //To protect from overposting attacks, enable the specific properties you want to bind to.
+        //For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("OrderId,CustomerId,ShipperName,ShippedCity,ShippedState,ShippedCountry,OrderDate,ShippingCost")] OrderDetail orderDetail)
@@ -175,6 +190,7 @@ namespace StoreFrontV2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        #endregion
         private bool OrderDetailExists(int id)
         {
           return _context.OrderDetails.Any(e => e.OrderId == id);

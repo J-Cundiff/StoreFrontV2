@@ -7,8 +7,8 @@
 <h2 class="title text-center">@ViewData["Title"]</h2>
 
 <div class="row">
+    <dl class="col-md-6 col-md-offset-4" id="categoryContainer">
     <h3 class="text-center">This will permentaly remove this record and cannot be undone!</h3>
-    <dl class="col-md-4 col-md-offset-5">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.CategoryName)
         </dt>
@@ -25,7 +25,7 @@
             <form asp-action="Delete">
                 <input type="hidden" asp-for="CategoryId" />
                 <input type="submit" value="Delete" class="btn btn-danger" />
-                <a asp-action="Index" class="btn btn-success">Back to Categories</a>
+                <a asp-action="Index" class="btn btn-primary">Back to Categories</a>
             </form>
         </dd>
     </dl>

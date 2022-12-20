@@ -1,16 +1,10 @@
 ﻿@model StoreFrontV2.DATA.EF.Models.OrderDetail
 
-@{
-    ViewData["Title"] = "Add Order Details";
-}
-
-<h1>@ViewData["Title"]</h1>
-
-
-<hr />
+@*<h4>OrderDetail</h4>
+<hr />*@
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="col-md-4 col-md-offset-4">
+        <form asp-action="OrrderDetailCreate">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="CustomerId" class="control-label"></label>
@@ -53,9 +47,9 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to Order Details</a>
-</div>
+@*<div>
+    <a asp-action="Index">Back to List</a>
+</div>*@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

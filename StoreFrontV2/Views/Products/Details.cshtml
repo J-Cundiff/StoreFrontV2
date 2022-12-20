@@ -9,7 +9,7 @@
 
 <div class="row">
 
-        <div class="col-sm-9 col-md-offset-2">
+        <div class="col-sm-9 col-md-offset-2" id="productDetails">
         	<div class="product-details">
         		<!--product-details-->
         		<div class="col-sm-5">
@@ -18,7 +18,7 @@
         				<img src="~/images/@Model.ProductImage" alt="@Model.ProductDescription" />
         			</div>
         		</div>
-        		<div class="col-sm-7">
+        		<div class="col-sm-6">
         			<div class="product-information">
         				<!--/product-information-->
         				<h2><strong>@Model.ProductName</strong></h2>
@@ -27,13 +27,14 @@
         					<span>US @Html.DisplayFor(model => model.ProductPrice)</span>
         					<label>Quantity:</label>
         					<input type="text" value="3" />
-        					<button type="button" class="btn btn-fefault cart">
+        					<button type="button" class="btn btn-primary cart">
         						<i class="fa fa-shopping-cart"></i>
         						Add to cart
         					</button>
         				</span>
         				<p><b>Availability:</b> @Model.Status.StatusName</p>
         				<p><b>Brand:</b> @Model.Supplier.SupplierName</p>
+                        <p><b>Description:</b> @Model.ProductDescription</p>
                         <div>
                             <a asp-action="TiledProducts" class="btn btn-primary">Back to Products</a>
                         </div>

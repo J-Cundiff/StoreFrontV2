@@ -40,7 +40,7 @@ namespace StoreFrontV2.Controllers
         {
             
             //Items oer page
-            int pageSize = 12;
+            int pageSize = 9;
 
             //var storeFrontContext = _context.Products.Include(p => p.Category)
             //    .Include(p => p.Status)
@@ -97,8 +97,30 @@ namespace StoreFrontV2.Controllers
             return View(products.ToPagedList(page, pageSize));
         }
 
+
+
+        #region AJAX Actions
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult AjaxCreate(Product product)
+        {
+            _context.Products.Add(product);
+            _context.SaveChanges();
+            return Json(product);
+
+        }
+
+
+
+        #endregion
+
+
+        #region Original EF Actions
+
+
         [AllowAnonymous]
-        // GET: Products/Details/5
+        //GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Products == null)
@@ -120,99 +142,99 @@ namespace StoreFrontV2.Controllers
         }
 
         // GET: Products/Create
-        public IActionResult Create()
-        {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName");
-            ViewData["StatusId"] = new SelectList(_context.ProductStatuses, "StatusId", "StatusName");
-            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "SupplierId", "SupplierName");
-            return View();
-        }
+        //public IActionResult Create()
+        //{
+        //    ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName");
+        //    ViewData["StatusId"] = new SelectList(_context.ProductStatuses, "StatusId", "StatusName");
+        //    ViewData["SupplierId"] = new SelectList(_context.Suppliers, "SupplierId", "SupplierName");
+        //    return View();
+        //}
 
         // POST: Products/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,ProductName,ProductPrice,ProductDescription,QtyInStock,QtyOnOrder,StatusId,ProductImage,CategoryId,SupplierId,Image")] Product product)
-        {
-            if (ModelState.IsValid)
-            {
-                #region fileUpload
-                //Check if a file was uploaded
-                if (product.Image != null)
-                {
-                    //Check the file type
-                    // - Store the extention of the image in a string
-                    string ext = Path.GetExtension(product.Image.FileName);
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("ProductId,ProductName,ProductPrice,ProductDescription,QtyInStock,QtyOnOrder,StatusId,ProductImage,CategoryId,SupplierId,Image")] Product product)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        #region fileUpload
+        //        //Check if a file was uploaded
+        //        if (product.Image != null)
+        //        {
+        //            //Check the file type
+        //            // - Store the extention of the image in a string
+        //            string ext = Path.GetExtension(product.Image.FileName);
 
-                    //Create a list of vaild extentions to check the ext against
-                    string[] vaildExts = { ".jpeg", ".jpg", ".gif", ".png" };
+        //            //Create a list of vaild extentions to check the ext against
+        //            string[] vaildExts = { ".jpeg", ".jpg", ".gif", ".png" };
 
-                    //Verify the uploaded file has an extention matching one of the extetions in the list above
-                    //We will also want to verify the file size will work with our .NET app
-                    if (vaildExts.Contains(ext.ToLower()) && product.Image.Length < 4_194_303)
-                    {
-                        //Generate a unique file name
-                        product.ProductImage = Guid.NewGuid() + ext;
+        //            //Verify the uploaded file has an extention matching one of the extetions in the list above
+        //            //We will also want to verify the file size will work with our .NET app
+        //            if (vaildExts.Contains(ext.ToLower()) && product.Image.Length < 4_194_303)
+        //            {
+        //                //Generate a unique file name
+        //                product.ProductImage = Guid.NewGuid() + ext;
 
-                        //Save the file to the web sever (here, save to the wwwroot/images
-                        //To access the wwwroot, we added the _webHostEnvironment feild to the controller (See the top)
-                        //Retrieve the path to the wwwroot
-                        string webRootPath = _webHostEnvironment.WebRootPath;
+        //                //Save the file to the web sever (here, save to the wwwroot/images
+        //                //To access the wwwroot, we added the _webHostEnvironment feild to the controller (See the top)
+        //                //Retrieve the path to the wwwroot
+        //                string webRootPath = _webHostEnvironment.WebRootPath;
 
-                        //Variable for the full imagepath (this is where we will save the image)
-                        string fullImagePath = webRootPath + "/images/";
+        //                //Variable for the full imagepath (this is where we will save the image)
+        //                string fullImagePath = webRootPath + "/images/";
 
-                        //Creat a MemoryStream to read the image into the server memory
-                        using (var memoryStream = new MemoryStream())
-                        {
-                            //Tranfer the file from the request to the server memory
-                            await product.Image.CopyToAsync(memoryStream);
+        //                //Creat a MemoryStream to read the image into the server memory
+        //                using (var memoryStream = new MemoryStream())
+        //                {
+        //                    //Tranfer the file from the request to the server memory
+        //                    await product.Image.CopyToAsync(memoryStream);
 
-                            //Genrate the image using the info captured from the MemroyStream
-                            //Add using staement for System.Drawing to get access to the Image class
-                            using (var img = Image.FromStream(memoryStream))
-                            {
-                                //Send the image to the ImageUtility for resizing and thumbnail creation
-                                //Items needed for the ImageUtility.ResizeImage()
-                                //- a string with the path where the file should be saved
-                                //- a string with the name of the file
-                                //- The actual Image itself
-                                //- An Int with the maximum size (in pixels)
-                                //- An int with the maximum thumbnail size
+        //                    //Genrate the image using the info captured from the MemroyStream
+        //                    //Add using staement for System.Drawing to get access to the Image class
+        //                    using (var img = Image.FromStream(memoryStream))
+        //                    {
+        //                        //Send the image to the ImageUtility for resizing and thumbnail creation
+        //                        //Items needed for the ImageUtility.ResizeImage()
+        //                        //- a string with the path where the file should be saved
+        //                        //- a string with the name of the file
+        //                        //- The actual Image itself
+        //                        //- An Int with the maximum size (in pixels)
+        //                        //- An int with the maximum thumbnail size
 
-                                int maxImageSize = 500; //In pixels
-                                int maxThumbSize = 100; //In pixels
+        //                        int maxImageSize = 500; //In pixels
+        //                        int maxThumbSize = 100; //In pixels
 
-                                ImageUtility.ResizeImage(fullImagePath, product.ProductImage, img, maxImageSize, maxThumbSize);
+        //                        ImageUtility.ResizeImage(fullImagePath, product.ProductImage, img, maxImageSize, maxThumbSize);
 
-                                //myFile.Save("path/to/folder", "filename"); => How to save something that is not an image.
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    //No image was uplaoded, assign a default fileName
-                    //And include a default image (With that fileName) in the images folder
-                    product.ProductImage = "noimage.png";
-                }
-
-
-                #endregion
+        //                        //myFile.Save("path/to/folder", "filename"); => How to save something that is not an image.
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            //No image was uplaoded, assign a default fileName
+        //            //And include a default image (With that fileName) in the images folder
+        //            product.ProductImage = "noimage.png";
+        //        }
 
 
+        //        #endregion
 
 
-                _context.Add(product);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", product.CategoryId);
-            ViewData["StatusId"] = new SelectList(_context.ProductStatuses, "StatusId", "StatusName", product.StatusId);
-            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "SupplierId", "SupplierName", product.SupplierId);
-            return View(product);
-        }
+
+
+        //        _context.Add(product);
+        //        await _context.SaveChangesAsync();
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", product.CategoryId);
+        //    ViewData["StatusId"] = new SelectList(_context.ProductStatuses, "StatusId", "StatusName", product.StatusId);
+        //    ViewData["SupplierId"] = new SelectList(_context.Suppliers, "SupplierId", "SupplierName", product.SupplierId);
+        //    return View(product);
+        //}
 
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -368,6 +390,7 @@ namespace StoreFrontV2.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        #endregion
         private bool ProductExists(int id)
         {
             return _context.Products.Any(e => e.ProductId == id);

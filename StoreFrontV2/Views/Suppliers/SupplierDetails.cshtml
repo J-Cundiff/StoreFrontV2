@@ -1,14 +1,9 @@
 ﻿@model StoreFrontV2.DATA.EF.Models.Supplier
 
-@{
-    ViewData["Title"] = "! Delete " + Model.SupplierName + " ?!";
-}
-
-<h2 class="title text-center">@ViewData["Title"]</h2>
-
-<div class="row">
-    <dl class="col-md-6 col-md-offset-3" id="supplierContainer">
-    <h3 class="text-center">This will permentaly remove this record and cannot be undone!</h3>
+<div>
+  @*  <h4>Supplier</h4>
+    <hr />*@
+    <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.SupplierName)
         </dt>
@@ -45,14 +40,9 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.SupplierDescription)
         </dd>
-        <dd>
-            <form asp-action="Delete">
-                <input type="hidden" asp-for="SupplierId" />
-                <input type="submit" value="Delete" class="btn btn-danger" />
-                <a asp-action="Index" class="btn btn-primary">Back to Suppliers</a>
-            </form>
-        </dd>
     </dl>
-    
-    
 </div>
+@*<div>
+    <a asp-action="Edit" asp-route-id="@Model?.SupplierId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>*@
