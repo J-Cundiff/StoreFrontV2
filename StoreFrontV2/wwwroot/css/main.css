@@ -1702,14 +1702,15 @@ h2.title {
 
 
 .cart_delete a {
-  background:#F0F0E9;
-  color: #FFFFFF;
+  background:#000;
+  color: #ff0000;
   padding: 5px 7px;
   font-size: 16px
 }
 
 .cart_delete a:hover {
   background:#fb0505;
+  color: #000;
 }
 
 
@@ -2538,10 +2539,10 @@ h2.title {
 }
 
 #contact-page .contact-info p {
-  margin-bottom: 0;
-  color: #696763;
-  font-size: 16px;
-  line-height: 25px;
+	margin-bottom: 0;
+	color: #2a261e;
+	font-size: 16px;
+	line-height: 25px;
 }
 
 .social-networks{

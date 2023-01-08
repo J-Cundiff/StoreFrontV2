@@ -79,6 +79,7 @@
 						            <th>
 						                @Html.DisplayNameFor(model => model.Supplier)
 						            </th>
+									<th></th>
 									@if (User.IsInRole("Admin"))
 									{
 										<th>Actions</th>
@@ -90,7 +91,7 @@
 								@foreach (var item in Model) {
 									<tr>
 									    <td>
-									        <a asp-action="Details" asp-route-id="@item.ProductId">
+									        <a asp-action="Details" asp-route-id="@item.ProductId" id="productName">
 												@Html.DisplayFor(modelItem => item.ProductName)
 											
 									        </a>
@@ -121,6 +122,9 @@
 									    <td>
 									        @Html.DisplayFor(modelItem => item.Supplier.SupplierName)
 									    </td>
+										<td>
+											<a asp-action="AddToCart" asp-controller="ShoppingCart" asp-route-id="@item.ProductId" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+										</td>
 
 											@if (User.IsInRole("Admin"))
 											{

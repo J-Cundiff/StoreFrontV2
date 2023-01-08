@@ -38,49 +38,49 @@
     border-radius: 15px;
 }
 
-    .navbar-default .navbar-brand {
-        font-size: 40px;
-        line-height: 40px;
-        padding-top: 4px;
-    }
+.navbar-default .navbar-brand {
+    font-size: 40px;
+    line-height: 40px;
+    padding-top: 4px;
+}
 
-    .navbar-default .navbar-nav li a {
-        color: #000000;
-        font-size: 18px;
-        font-weight: 500;
-        line-height: 40px;
-        transition: all 0.4s ease-in;
-    }
+.navbar-default .navbar-nav li a {
+    color: #000000;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 40px;
+    transition: all 0.4s ease-in;
+}
 
-    .navbar-default .navbar-nav > li > a:hover,
-    .navbar-default .navbar-nav > li > a:focus {
-        color: #fff;
-    }
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+    color: #fff;
+}
 
-    .navbar-default .navbar-nav > .active > a,
-    .navbar-default .navbar-nav > .active > a:hover,
-    .navbar-default .navbar-nav > .active > a:focus {
-        color: #00b7e9f6;
-        background-color: #ef8706bf;
-    }
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+    color: #00b7e9f6;
+    background-color: #ef8706bf;
+}
 
-    .navbar-default .navbar-toggle {
-        background: #303030;
-        border-radius: 0px;
-        border: none;
-        margin-top: 20px;
-        margin-bottom: 30px;
-    }
+.navbar-default .navbar-toggle {
+    background: #303030;
+    border-radius: 0px;
+    border: none;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
 
-        .navbar-default .navbar-toggle .icon-bar {
-            background: #fff;
-            border-color: transparent;
-        }
+.navbar-default .navbar-toggle .icon-bar {
+    background: #fff;
+    border-color: transparent;
+}
 
-        .navbar-default .navbar-toggle:hover,
-        .navbar-default .navbar-toggle:focus {
-            background-color: #036299c9
-        }
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus {
+    background-color: #036299c9
+}
 
 /*.active {
     background: #333;
@@ -109,6 +109,7 @@
 .carousel-inner {
     margin-top: 50px;
     margin-bottom: 100px;
+    margin-left: -50px;
 }
 
 .carousel-indicators {
@@ -121,11 +122,26 @@
     border: 1px solid #ef8706;
     padding: 40px;
     border-radius: 10px;
+    margin-bottom: 25px;
 }
 
+#tableShopContainer #productName {
+    color: #23028b;
+    font-weight: 600;
+}
+
+#tableShopContainer .add-to-cart {
+    background: #0dff48;
+    color: #1114f4;
+}
+
+#tableShopContainer .add-to-cart:hover {
+    color: #0dff48;
+    background-color: #1114f4;
+    border-radius: 10px;
+}
 
 /**** Datatable *****/
-
 .dataTables_wrapper {
     margin-bottom: 65px;
 }
@@ -134,6 +150,12 @@
 #productDetails .btn.btn-primary {
     background: #0dff48;
     color: #1114f4;
+    margin: 15px;
+}
+
+#productDetails .btn.btn-primary:hover {
+    color:#0dff48;
+    background-color: #1114f4;
 }
 
 
@@ -144,11 +166,12 @@
     border-radius: 15px;
     padding-bottom: 15px;
     padding-top: 10px;
+    margin-top: 65px;
     margin-bottom: 20px;
 }
 
 #registerContainer h2 {
-    color: #1114f4
+    color: #272897
 }
 
 #registerContainer .btn.btn-primary {
@@ -157,6 +180,10 @@
     margin-bottom: 5px;
 }
 
+#registerContainer .btn.btn-primary:hover {
+    background: #1114f4;
+    color: #0dff48;
+}
 
 /***** Suppliers ******/
 #supplierContainer {
@@ -211,10 +238,10 @@
     margin-bottom: 20px;
 }
 
-    #categoryContainerDetails .btn.btn-primary {
-        background: #0dff48;
-        color: #1114f4;
-    }
+#categoryContainerDetails .btn.btn-primary {
+    background: #0dff48;
+    color: #1114f4;
+}
 
 /***** Order Detail ******/
 #orderDetailContainer {
@@ -226,10 +253,10 @@
     margin-bottom: 20px;
 }
 
-    #orderDetailContainer .btn.btn-primary {
-        background: #0dff48;
-        color: #1114f4;
-    }
+#orderDetailContainer .btn.btn-primary {
+    background: #0dff48;
+    color: #1114f4;
+}
 
 #orderDetailContainerDetails {
     background-color: #ef8706;
@@ -240,10 +267,10 @@
     margin-bottom: 20px;
 }
 
-    #orderDetailContainerDetails .btn.btn-primary {
-        background: #0dff48;
-        color: #1114f4;
-    }
+#orderDetailContainerDetails .btn.btn-primary {
+    background: #0dff48;
+    color: #1114f4;
+}
 
 /***** Customers ******/
 #customerContainer {
@@ -255,10 +282,10 @@
     margin-bottom: 20px;
 }
 
-    #customerContainer .btn.btn-primary {
-        background: #0dff48;
-        color: #1114f4;
-    }
+#customerContainer .btn.btn-primary {
+    background: #0dff48;
+    color: #1114f4;
+}
 
 #customerContainerDetails {
     background-color: #ef8706;
@@ -269,10 +296,12 @@
     margin-bottom: 20px;
 }
 
-    #customerContainerDetails .btn.btn-primary {
-        background: #0dff48;
-        color: #1114f4;
-    }
+#customerContainerDetails .btn.btn-primary {
+    background: #0dff48;
+    color: #1114f4;
+}
+
+/*****Contact******/
 
 #contactContainer {
     background-color: #ef8706bf;
@@ -285,12 +314,18 @@
 
 #contactContainer h2 {
     margin-top: 30px;
-    color: #1114f4;
+    color: #272897;
 }
+
 
 #contactContainer .btn.btn-primary {
     background: #0dff48;
     color: #1114f4;
+}
+
+#contactContainer .btn.btn-primary:hover {
+    color: #0dff48;
+    background: #1114f4;
 }
 
 
@@ -308,35 +343,48 @@
     border-radius: 10px;
     margin: 20px 0 20px 20px;
 }
-    #shoppingCartContainer p {
-        color: #1114f4;
-    }
+#shoppingCartContainer p {
+    color: #1114f4;
+}
 
-    #shoppingCartContainer .btn-primary {
-        background: #0dff48;
-        color: #1114f4;
-    }
+#shoppingCartContainer .btn-primary {
+    background: #0dff48;
+    color: #1114f4;
+}
 
-    #shoppingCartContainer a .cart_delete {
-        background: #1114f4;
-    }
+#shoppingCartContainer .btn-primary:hover {
+    color: #0dff48;
+    background-color: #1114f4;
+}
+
+
+#shoppingCartContainer a .cart_delete {
+    color: #1114f4;
+}
+
+/* Page Number*/
+#pageNbr {
+    color: #ef8706;
+}
 
 
 
-    @media(max-width: 1200px) {
-        .navbar-default {
-        background: #ef8706bf;
-        border: none;
-        border-left: 6px solid #ef8706bf;
-        padding-right: 40px;
-        margin: 0 !important;
-        position: static;
-        top: 20px;
-        border-radius: 15px;
-    }
+
+
+@media(max-width: 1200px) {
+    .navbar-default {
+    background: #ef8706bf;
+    border: none;
+    border-left: 6px solid #ef8706bf;
+    padding-right: 40px;
+    margin: 0 !important;
+    position: static;
+    top: 20px;
+    border-radius: 15px;
+}
 
     
-}
+
 
 @media(max-width: 992px){
 

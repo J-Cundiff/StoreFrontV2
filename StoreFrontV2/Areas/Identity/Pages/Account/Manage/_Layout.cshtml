@@ -12,16 +12,19 @@
 <h2 class="title text-center">Manage your account</h2>
 
 <div class="row">
-    <h2 class="title text-center">Change your account settings</h2>
+    @*<h2 class="title text-center">Change your account settings</h2>
     <hr />
         <div class="row">
             <div class="col-md-9 col-md-offset-3">
-                <partial name="_ManageNav" />
+                
             </div>
-        </div>
+        </div>*@
     <div class="row">
-        <div class="col-md-9 col-md-offset-4">
-            @RenderBody()
+        <div class="col-md-6 col-md-offset-3" id="roleContainer">
+            <partial name="_ManageNav"/>
+            <div class="col-md-6 col-md-offset-3">
+                @RenderBody()
+            </div>
         </div>
     </div>
 </div>

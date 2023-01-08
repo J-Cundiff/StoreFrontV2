@@ -27,10 +27,9 @@
         					<span>US @Html.DisplayFor(model => model.ProductPrice)</span>
         					<label>Quantity:</label>
         					<input type="text" value="3" />
-        					<button type="button" class="btn btn-primary cart">
-        						<i class="fa fa-shopping-cart"></i>
-        						Add to cart
-        					</button>
+        					
+                            <a asp-action="AddToCart" asp-controller="ShoppingCart" asp-route-id="@Model.ProductId" class="btn btn-primary"><i class="fa fa-shopping-cart"></i>Add to cart</a>
+        					
         				</span>
         				<p><b>Availability:</b> @Model.Status.StatusName</p>
         				<p><b>Brand:</b> @Model.Supplier.SupplierName</p>
